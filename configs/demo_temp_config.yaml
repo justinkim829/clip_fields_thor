@@ -1,0 +1,17 @@
+clip_fields:
+  batch_size: 16
+  learning_rate: 0.005
+  num_levels: 8
+  resolution: 0.1
+  update_frequency: 5
+thor:
+  grid_size: 0.25
+  max_steps_per_task: 200
+  scenes:
+  - FloorPlan1
+  success_distance: 1.5
+training:
+  checkpoint_frequency: 10
+  exploration_episodes: 36
+  object_learning_episodes: 36
+  validation_episodes: 18

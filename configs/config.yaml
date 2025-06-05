@@ -1,0 +1,110 @@
+# CLIP-Fields Thor Integration Configuration
+# ==========================================
+
+# System Configuration
+system:
+  # Communication settings
+  server_address: "tcp://127.0.0.1:4242"
+  timeout: 30  # seconds
+  max_retries: 3
+  
+  # Performance settings
+  async_buffer_size: 100
+  query_frequency: 10  # Query semantic memory every N steps
+  
+  # Logging
+  log_level: "INFO"
+  log_file: "clip_fields_thor.log"
+
+# AI2-THOR Configuration
+thor:
+  # Scene settings
+  default_scene: "FloorPlan1"
+  agent_mode: "default"
+  visibility_distance: 1.5
+  grid_size: 0.25
+  
+  # Camera settings
+  camera_fov: 90.0  # degrees
+  image_width: 224
+  image_height: 224
+  
+  # Navigation settings
+  max_steps_per_task: 500
+  success_distance: 1.0  # meters
+  rotation_step: 30.0  # degrees
+  movement_step: 0.25  # meters
+
+# CLIP-Fields Configuration
+clip_fields:
+  # Model architecture
+  num_levels: 16
+  level_dim: 8
+  base_resolution: 16
+  log2_hashmap_size: 24
+  mlp_depth: 2
+  mlp_width: 256
+  
+  # Training settings
+  learning_rate: 0.002
+  batch_size: 32
+  num_negatives: 128
+  memory_bank_size: 1600  # 16 * batch_size
+  
+  # Online learning
+  online_learning_rate: 0.0002  # 0.1x base rate
+  consolidation_penalty: 0.01
+  update_frequency: 10  # Update field every N observations
+  
+  # Spatial settings
+  default_bounds: [-10.0, 10.0, -10.0, 10.0, 0.0, 4.0]  # x_min, x_max, z_min, z_max, y_min, y_max
+  query_resolution: 0.05  # 5cm resolution
+  max_query_points: 1000
+
+# Weak Supervision Configuration
+weak_supervision:
+  # Object detection (Detic)
+  detic_config: "configs/detic_config.yaml"
+  detic_weights: "models/detic_centernet2_swin-b_fpn_4x_lvis-coco-in21k.pth"
+  detection_threshold: 0.3
+  
+  # Segmentation (LSeg)
+  lseg_config: "configs/lseg_config.yaml"
+  lseg_weights: "checkpoints/demo_e200.ckpt"
+  
+  # Vision-language models
+  clip_model: "ViT-B/32"
+  sentence_model: "all-mpnet-base-v2"
+  
+  # Domain adaptation
+  fine_tune_detic: true
+  synthetic_data_path: "data/synthetic_thor_images"
+  fine_tune_epochs: 2
+
+# Evaluation Configuration
+evaluation:
+  # Task types
+  task_types: ["ObjectNav", "Fetch", "PickUp"]
+  
+  # Metrics
+  metrics: ["success_rate", "spl", "path_length", "goal_distance", "execution_time"]
+  
+  # Comparison baselines
+  baselines: ["map_free", "fixed_labels", "oracle"]
+  
+  # Output settings
+  results_dir: "results"
+  save_trajectories: true
+  save_semantic_maps: true
+
+# Hardware Configuration
+hardware:
+  # GPU settings
+  device: "cuda"
+  mixed_precision: true
+  gpu_memory_fraction: 0.8
+  
+  # CPU settings
+  num_workers: 4
+  pin_memory: true
+
